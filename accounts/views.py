@@ -6,16 +6,24 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, LoginForm
 
 
+ROLE_FAMILY = 'Remote Family'
+ROLE_CAREGIVER = 'Local Caregiver'
+
+ROLE_DASHBOARDS = {
+    ROLE_FAMILY: 'family_dashboard',
+    ROLE_CAREGIVER: 'caregiver_dashboard',
+}
+
+
 def get_role_dashboard_url(user):
-    if user.role == 'caregiver':
-        return 'caregiver_dashboard'
-    return 'family_dashboard'
+    # If role unknown -> login 
+    return ROLE_DASHBOARDS.get(user.role, 'login')
 
 
 def role_required(allowed_role):
     def decorator(view_func):
-        @wraps(view_func)
         @login_required
+        @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             if request.user.role != allowed_role:
                 messages.error(request, 'Access denied: You do not have permission to view that dashboard.')
@@ -79,11 +87,11 @@ def dashboard_redirect_view(request):
     return redirect(get_role_dashboard_url(request.user))
 
 
-@role_required('caregiver')
+@role_required(ROLE_CAREGIVER)
 def caregiver_dashboard_view(request):
     return render(request, 'accounts/caregiver_dashboard.html')
 
 
-@role_required('family')
+@role_required(ROLE_FAMILY)
 def family_dashboard_view(request):
     return render(request, 'accounts/family_dashboard.html')
