@@ -28,6 +28,11 @@ body {
     padding: 2rem 1.5rem;
 }
 
+body.dashboard-body {
+    display: block;
+    padding: 1.75rem 1.5rem;
+}
+
 .card {
     background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(16px);
@@ -38,22 +43,6 @@ body {
     max-width: 450px;
     padding: 2.5rem 2.25rem;
     box-shadow: 0 25px 50px -12px rgba(6, 78, 59, 0.35), 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-.brand-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    background-color: #ecfdf5;
-    border: 1px solid #a7f3d0;
-    color: #059669;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.28rem 0.65rem;
-    border-radius: 5px;
-    margin-bottom: 0.95rem;
 }
 
 h1 {
@@ -127,7 +116,12 @@ label {
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16);
 }
 
-.field-error {
+select.form-input {
+    cursor: pointer;
+}
+
+.field-error,
+.errorlist {
     color: #dc2626;
     font-size: 0.8rem;
     margin-top: 0.35rem;
@@ -140,7 +134,8 @@ label {
     margin-top: 0.35rem;
 }
 
-button {
+button,
+.btn-primary {
     width: 100%;
     padding: 0.85rem;
     background: linear-gradient(135deg, #059669 0%, #10b981 55%, #65a30d 100%);
@@ -156,12 +151,14 @@ button {
     transition: all 0.2s ease;
 }
 
-button:hover {
+button:hover,
+.btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 14px 24px -5px rgba(16, 185, 129, 0.55);
 }
 
-button:active {
+button:active,
+.btn-primary:active {
     transform: translateY(0);
 }
 
@@ -183,4 +180,178 @@ button:active {
 .footer-link a:hover {
     text-decoration: underline;
     color: var(--accent-emerald);
+}
+
+.dashboard-shell {
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+.topbar {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: 0 15px 35px -10px rgba(6, 78, 59, 0.25);
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.role-pill {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #059669;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 5px;
+}
+
+.role-pill-family {
+    background-color: #f0fdfa;
+    border-color: #99f6e4;
+    color: #0f766e;
+}
+
+.topbar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.45rem 0.75rem;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+
+.nav-link:hover {
+    background-color: #f1f5f9;
+    color: var(--text-primary);
+}
+
+.nav-link.active {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.btn-nav-logout {
+    width: auto;
+    margin-top: 0;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    background: #fee2e2;
+    color: #b91c1c;
+    box-shadow: none;
+}
+
+.btn-nav-logout:hover {
+    background: #fecaca;
+    transform: none;
+    box-shadow: none;
+}
+
+.welcome-banner {
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 10px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: 0 20px 40px -12px rgba(6, 78, 59, 0.28);
+}
+
+.welcome-banner .subtitle {
+    margin-bottom: 0;
+}
+
+.btn-sos {
+    width: auto;
+    margin-top: 0;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+    box-shadow: 0 10px 20px -5px rgba(220, 38, 38, 0.4);
+}
+
+.btn-sos:hover {
+    box-shadow: 0 14px 24px -5px rgba(220, 38, 38, 0.5);
+}
+
+.status-pill-ok {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.55rem 0.9rem;
+    border-radius: 6px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+}
+
+.panel {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 15px 35px -10px rgba(6, 78, 59, 0.22);
+}
+
+.panel h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+}
+
+.panel-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    margin-bottom: 1rem;
+}
+
+.empty-box {
+    background-color: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    padding: 0.95rem 1rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
 }

@@ -58,3 +58,19 @@ class RegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'you@example.com',
+            'autocomplete': 'email',
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Enter your password',
+            'autocomplete': 'current-password',
+        })
+    )

@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In — Alaga</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="card">
+        <div class="brand-badge">Placeholder Logo</div>
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Log in to view your shared care record, medications, and updates.</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email Address</label>
+                {{ form.email }}
+                {% if form.email.errors %}<ul class="field-error">{{ form.email.errors }}</ul>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+                {% if form.password.errors %}<ul class="field-error">{{ form.password.errors }}</ul>{% endif %}
+            </div>
+
+            <button type="submit">Log In</button>
+        </form>
+
+        <div class="footer-link">
+            Don't have an account? <a href="{% url 'register' %}">Create one</a>
+        </div>
+    </div>
+</body>
+</html>
