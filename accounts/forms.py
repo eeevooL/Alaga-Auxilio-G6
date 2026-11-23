@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
 from .models import User
 
 
@@ -59,6 +60,7 @@ class RegistrationForm(UserCreationForm):
             user.save()
         return user
 
+
 class LoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
@@ -74,3 +76,35 @@ class LoginForm(forms.Form):
             'autocomplete': 'current-password',
         })
     )
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['full_name', 'email']
+        widgets = {
+            'full_name': forms.TextInput(attrs={
+                'class': 'form-input',
+                'required': True,
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-input',
+                'required': True,
+            }),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip().lower()
+        qs = User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError("This email address is already in use by another account.")
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if hasattr(user, 'username') and user.username:
+            user.username = user.email
+        if commit:
+            user.save()
+        return user

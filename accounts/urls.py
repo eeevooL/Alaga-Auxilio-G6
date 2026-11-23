@@ -9,4 +9,5 @@ urlpatterns = [
     path('dashboard/', views.dashboard_redirect_view, name='dashboard'),
     path('dashboard/caregiver/', views.caregiver_dashboard_view, name='caregiver_dashboard'),
     path('dashboard/family/', views.family_dashboard_view, name='family_dashboard'),
+    path("profile/", views.profile_view, name="profile"),
 ]

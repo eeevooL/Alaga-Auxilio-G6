@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, UserProfileForm
 
 
 ROLE_FAMILY = 'Remote Family'
@@ -16,7 +16,7 @@ ROLE_DASHBOARDS = {
 
 
 def get_role_dashboard_url(user):
-    # If role unknown -> login 
+    # If role unknown -> login
     return ROLE_DASHBOARDS.get(user.role, 'login')
 
 
@@ -75,6 +75,7 @@ def login_view(request):
 
     return render(request, 'accounts/login.html', {'form': form})
 
+
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
@@ -95,3 +96,27 @@ def caregiver_dashboard_view(request):
 @role_required(ROLE_FAMILY)
 def family_dashboard_view(request):
     return render(request, 'accounts/family_dashboard.html')
+
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile details have been updated.')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = UserProfileForm(instance=request.user)
+
+    return render(
+        request,
+        'accounts/profile.html',
+        {
+            'form': form,
+            'user_obj': request.user,
+            'dashboard_url_name': get_role_dashboard_url(request.user),
+        },
+    )

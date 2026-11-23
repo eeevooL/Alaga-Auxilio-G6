@@ -20,6 +20,7 @@
                 <a href="#appointments" class="nav-link">Appointments</a>
                 <a href="#instructions" class="nav-link">Send Instructions</a>
                 <a href="#directory" class="nav-link">Medical Info</a>
+                <a href="{% url 'profile' %}" class="nav-link nav-profile">Profile</a>
                 <form method="POST" action="{% url 'logout' %}" class="inline-form">
                     {% csrf_token %}
                     <button type="submit" class="btn-nav-logout">Log Out</button>
