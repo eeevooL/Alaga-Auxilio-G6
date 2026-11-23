@@ -9,6 +9,7 @@
     <div class="actions">
         <a href="{% url 'dose_today' profile.pk %}" class="btn-inline">Today's Doses</a>
         <a href="{% url 'medication_list' profile.pk %}" class="btn-inline btn-outline">Medications</a>
+        <a href="{% url 'medication_create' profile.pk %}" class="btn-inline btn-outline">+ Add Medication</a>
         {% if is_creator %}<a href="{% url 'care_profile_update' profile.pk %}" class="btn-inline btn-outline">Edit</a>{% endif %}
     </div>
 </div>
