@@ -1,0 +1,91 @@
+{% extends 'care/base.html' %}
+{% block title %}Today's Doses{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>Today's Doses</h1>
+        <p class="subtitle">{{ profile.full_name }} &middot; {{ today|date:"l, F j, Y" }}</p>
+    </div>
+    <div class="actions">
+        <a href="{% url 'medication_list' profile.pk %}" class="btn-inline btn-outline">Medications</a>
+        <a href="{% url 'care_profile_detail' profile.pk %}" class="btn-inline btn-outline">Profile</a>
+    </div>
+</div>
+
+{% if missed_today %}
+<div class="alert alert-error">{{ missed_today }} dose{{ missed_today|pluralize }} marked as Missed today. This needs attention.</div>
+{% endif %}
+
+<div class="surface">
+    <h2>Schedule</h2>
+    {% if rows %}
+    <table class="data-table">
+        <thead><tr><th>Time</th><th>Medicine</th><th>Dosage</th><th>Status</th>{% if is_caregiver %}<th class="right">Log</th>{% endif %}</tr></thead>
+        <tbody>
+        {% for row in rows %}
+            <tr>
+                <td><strong>{{ row.schedule.dose_time|time:"g:i A" }}</strong></td>
+                <td>{{ row.schedule.medication.medication_name }}</td>
+                <td>{{ row.schedule.medication.dosage }}</td>
+                <td>
+                    {% if row.log %}
+                        <span class="badge {% if row.log.status == 'Given' %}badge-ok{% else %}badge-bad{% endif %}">{{ row.log.status }}</span>
+                    {% else %}
+                        <span class="badge badge-muted">Not logged yet</span>
+                    {% endif %}
+                </td>
+                {% if is_caregiver %}
+                <td class="right">
+                    {% if row.log %}
+                        <form method="POST" action="{% url 'dose_log_update' row.log.pk %}" class="inline-form">
+                            {% csrf_token %}
+                            {% if row.log.status == 'Given' %}
+                                <input type="hidden" name="status" value="Missed">
+                                <button type="submit" class="btn-small btn-outline">Change to Missed</button>
+                            {% else %}
+                                <input type="hidden" name="status" value="Given">
+                                <button type="submit" class="btn-small btn-outline">Change to Given</button>
+                            {% endif %}
+                        </form>
+                    {% else %}
+                        <form method="POST" action="{% url 'dose_log_create' row.schedule.pk %}" class="inline-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="scheduled_date" value="{{ today|date:'Y-m-d' }}">
+                            <button type="submit" name="status" value="Given" class="btn-small">Given</button>
+                            <button type="submit" name="status" value="Missed" class="btn-small btn-danger">Missed</button>
+                        </form>
+                    {% endif %}
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="empty-box">No doses are scheduled for today.{% if not is_caregiver %} Add medications and dose times first.{% endif %}</div>
+    {% endif %}
+</div>
+
+<div class="surface spaced">
+    <h2>Dose History</h2>
+    <p class="panel-desc">The 30 most recent entries for everyone in the care circle to see.</p>
+    {% if history %}
+    <table class="data-table">
+        <thead><tr><th>Date</th><th>Time</th><th>Medicine</th><th>Status</th><th>Logged by</th></tr></thead>
+        <tbody>
+        {% for log in history %}
+            <tr>
+                <td>{{ log.scheduled_date|date:"M j, Y" }}</td>
+                <td>{{ log.schedule.dose_time|time:"g:i A" }}</td>
+                <td>{{ log.schedule.medication.medication_name }}</td>
+                <td><span class="badge {% if log.status == 'Given' %}badge-ok{% else %}badge-bad{% endif %}">{{ log.status }}</span></td>
+                <td>{{ log.logged_by.full_name|default:"System (auto)" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="empty-box">No doses logged yet.</div>
+    {% endif %}
+</div>
+{% endblock %}
