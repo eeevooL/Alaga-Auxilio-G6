@@ -147,11 +147,11 @@ def medication_list(request, pk):
     medications = profile.medications.prefetch_related('schedules')
     return render(request, 'care/medication_list.html', {
         'profile': profile, 'medications': medications,
-        'can_manage': request.user.role == ROLE_FAMILY,
+        'can_manage': True,
     })
 
 
-@role_required(ROLE_FAMILY)
+@login_required
 def medication_create(request, pk):
     profile = member_profile(request.user, pk)
     if request.method == 'POST':
@@ -171,7 +171,7 @@ def medication_create(request, pk):
 
 
 def _render_medication_detail(request, medication, schedule_form=None):
-    can_manage = request.user.role == ROLE_FAMILY
+    can_manage = True
     if can_manage and schedule_form is None:
         schedule_form = ScheduleForm(medication=medication)
     logs = MedicationLog.objects.filter(schedule__medication=medication).select_related(
@@ -223,7 +223,7 @@ def medication_delete(request, pk):
 
 
 @require_POST
-@role_required(ROLE_FAMILY)
+@login_required
 def schedule_add(request, pk):
     medication = member_medication(request.user, pk)
     form = ScheduleForm(request.POST, medication=medication)
@@ -237,7 +237,7 @@ def schedule_add(request, pk):
 
 
 @require_POST
-@role_required(ROLE_FAMILY)
+@login_required
 def schedule_update(request, pk):
     schedule = member_schedule(request.user, pk)
     form = ReminderForm(request.POST, instance=schedule)

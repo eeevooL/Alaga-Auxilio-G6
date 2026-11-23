@@ -392,3 +392,200 @@ button:hover,
 @media (max-width: 600px) {
     .card { padding: 2rem 1.5rem; }
 }
+/* ---------- Care pages (profiles, medications, doses) ---------- */
+.page-head {
+    background: var(--green-900);
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.page-head h1 { color: #ffffff; margin-bottom: 0.2rem; }
+.page-head .subtitle { color: var(--green-200); margin-bottom: 0; }
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+/* Link buttons and small form buttons share one look */
+.btn-inline,
+.btn-small {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    margin: 0;
+    padding: 0.6rem 1.15rem;
+    background: var(--green-700);
+    color: #ffffff;
+    border: 1px solid var(--green-700);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.btn-inline:hover,
+.btn-small:hover {
+    background: var(--green-900);
+    border-color: var(--green-900);
+    color: #ffffff;
+}
+.btn-inline:focus-visible,
+.btn-small:focus-visible {
+    outline: 3px solid rgba(16, 185, 129, 0.4);
+    outline-offset: 2px;
+}
+.btn-small { padding: 0.45rem 0.9rem; font-size: 0.82rem; }
+.btn-tiny { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+
+.btn-outline {
+    background: #ffffff;
+    color: var(--green-700);
+    border-color: var(--green-600);
+}
+.btn-outline:hover {
+    background: var(--green-50);
+    border-color: var(--green-700);
+    color: var(--green-900);
+}
+
+.btn-danger {
+    background: #fdf2f2;
+    color: var(--danger);
+    border-color: #f5c2c2;
+}
+.btn-danger:hover {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: #ffffff;
+}
+
+/* Buttons sitting on the dark page header */
+.page-head .btn-inline { background: #ffffff; color: var(--green-900); border-color: #ffffff; }
+.page-head .btn-inline:hover { background: var(--green-200); border-color: var(--green-200); color: var(--green-950); }
+.page-head .btn-inline.btn-outline { background: transparent; color: #ffffff; border-color: var(--green-200); }
+.page-head .btn-inline.btn-outline:hover { background: rgba(255, 255, 255, 0.14); border-color: #ffffff; color: #ffffff; }
+
+/* Cards */
+.surface {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 14px rgba(5, 46, 34, 0.1);
+    overflow-x: auto;
+}
+.surface h2 {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--green-950);
+    margin-bottom: 0.35rem;
+}
+.surface.spaced { margin-top: 1.25rem; }
+.form-surface { max-width: 640px; }
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 1.25rem;
+    align-items: start;
+}
+.card-grid .surface .actions { margin-top: 1rem; }
+
+/* Medical info list */
+.info-list {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 0.85rem 1rem;
+    margin-top: 0.75rem;
+}
+.info-list dt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding-top: 0.15rem;
+}
+.info-list dd { color: var(--text-primary); line-height: 1.45; }
+
+/* Tables */
+.data-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+.data-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid var(--green-200);
+    white-space: nowrap;
+}
+.data-table td {
+    padding: 0.8rem 0.75rem;
+    border-bottom: 1px solid var(--green-50);
+    font-size: 0.92rem;
+    vertical-align: middle;
+}
+.data-table tbody tr:hover { background: var(--green-50); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table .right, .data-table th.right { text-align: right; }
+.muted { color: var(--text-muted); font-size: 0.82rem; }
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    background: var(--green-50);
+    color: var(--green-900);
+    border: 1px solid var(--green-200);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+.badge-ok { background: #d1fae5; color: var(--green-900); border-color: #a7f3d0; }
+.badge-bad { background: #fdf2f2; color: #991b1b; border-color: #f5c2c2; }
+.badge-muted { background: #f1f5f3; color: var(--text-secondary); border-color: #dde6e1; }
+
+/* Forms inside cards */
+.form-surface form .actions { margin-top: 1.5rem; }
+.stack-form {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--green-200);
+}
+.stack-form .form-input { margin-bottom: 0.75rem; }
+.stack-form label { margin-top: 0.25rem; }
+.stack-form .btn-small { margin-top: 0.25rem; }
+textarea.form-input { resize: vertical; line-height: 1.4; }
+.row-form { display: flex; align-items: center; gap: 0.4rem; }
+.input-tiny { width: 5.5rem; padding: 0.4rem 0.6rem; font-size: 0.9rem; }
+.check-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+.check-row input[type="checkbox"] { width: 1.1rem; height: 1.1rem; accent-color: var(--green-700); }
+.empty-cta { margin-top: 1rem; }
+
+@media (max-width: 600px) {
+    .page-head { padding: 1.25rem 1.25rem; }
+    .info-list { grid-template-columns: 1fr; gap: 0.25rem; }
+    .info-list dd { margin-bottom: 0.6rem; }
+}
