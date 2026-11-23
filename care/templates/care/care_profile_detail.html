@@ -1,0 +1,64 @@
+{% extends 'care/base.html' %}
+{% block title %}{{ profile.full_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>{{ profile.full_name }}</h1>
+        <p class="subtitle">Age {{ profile.age }} &middot; Born {{ profile.birth_date|date:"F j, Y" }}</p>
+    </div>
+    <div class="actions">
+        <a href="{% url 'dose_today' profile.pk %}" class="btn-inline">Today's Doses</a>
+        <a href="{% url 'medication_list' profile.pk %}" class="btn-inline btn-outline">Medications</a>
+        {% if is_creator %}<a href="{% url 'care_profile_update' profile.pk %}" class="btn-inline btn-outline">Edit</a>{% endif %}
+    </div>
+</div>
+
+<div class="card-grid">
+    <div class="surface">
+        <h2>Medical Info</h2>
+        <dl class="info-list">
+            <dt>Blood type</dt><dd>{{ profile.blood_type }}</dd>
+            <dt>Conditions</dt><dd>{{ profile.conditions|default:"None listed"|linebreaksbr }}</dd>
+            <dt>Allergies</dt><dd>{{ profile.allergies|default:"None listed"|linebreaksbr }}</dd>
+            <dt>Insurance</dt><dd>{{ profile.insurance_info|default:"None listed" }}</dd>
+            <dt>Emergency notes</dt><dd>{{ profile.emergency_medical_notes|default:"None listed"|linebreaksbr }}</dd>
+        </dl>
+    </div>
+
+    <div class="surface">
+        <h2>Care Circle</h2>
+        <p class="panel-desc">People who can see this profile.</p>
+        <table class="data-table">
+            <tbody>
+            {% for m in members %}
+                <tr>
+                    <td>{{ m.user.full_name }}<br><span class="muted">{{ m.user.email }}</span></td>
+                    <td><span class="badge">{{ m.user.role }}</span></td>
+                    {% if is_creator %}
+                    <td class="right">
+                        {% if m.user_id != profile.created_by_id %}
+                        <form method="POST" action="{% url 'care_member_remove' profile.pk m.pk %}" class="inline-form"
+                              onsubmit="return confirm('Remove {{ m.user.full_name|escapejs }} from the care circle?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-small btn-danger">Remove</button>
+                        </form>
+                        {% else %}<span class="muted">Creator</span>{% endif %}
+                    </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_creator and add_form %}
+        <form method="POST" action="{% url 'care_member_add' profile.pk %}" class="stack-form" novalidate>
+            {% csrf_token %}
+            <label for="{{ add_form.email.id_for_label }}">Add to care circle</label>
+            {{ add_form.email }}
+            {% if add_form.email.errors %}<ul class="field-error">{{ add_form.email.errors }}</ul>{% endif %}
+            <button type="submit" class="btn-small">Add Member</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
