@@ -1,0 +1,36 @@
+{% extends 'care/base.html' %}
+{% block title %}Medications{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>Medications</h1>
+        <p class="subtitle">{{ profile.full_name }}</p>
+    </div>
+    <div class="actions">
+        <a href="{% url 'dose_today' profile.pk %}" class="btn-inline btn-outline">Today's Doses</a>
+        {% if can_manage %}<a href="{% url 'medication_create' profile.pk %}" class="btn-inline">Add Medication</a>{% endif %}
+    </div>
+</div>
+
+<div class="surface">
+{% if medications %}
+    <table class="data-table">
+        <thead><tr><th>Medicine</th><th>Dosage</th><th>Dose times</th><th>Dates</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for med in medications %}
+            <tr>
+                <td><strong>{{ med.medication_name }}</strong></td>
+                <td>{{ med.dosage }}</td>
+                <td>{% for s in med.schedules.all %}{{ s.dose_time|time:"g:i A" }}{% if not forloop.last %}, {% endif %}{% empty %}<span class="muted">No times yet</span>{% endfor %}</td>
+                <td>{{ med.start_date|date:"M j, Y" }}{% if med.end_date %} to {{ med.end_date|date:"M j, Y" }}{% else %} (ongoing){% endif %}</td>
+                <td>{% if med.is_active %}<span class="badge badge-ok">Active</span>{% else %}<span class="badge badge-muted">Inactive</span>{% endif %}</td>
+                <td class="right"><a href="{% url 'medication_detail' med.pk %}" class="btn-inline btn-outline btn-tiny">Open</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="empty-box">No medications yet.{% if can_manage %} Add the first one to start the dose schedule.{% endif %}</div>
+{% endif %}
+</div>
+{% endblock %}

@@ -16,7 +16,7 @@
             </div>
             <nav class="topbar-nav">
                 <a href="{% url 'caregiver_dashboard' %}" class="nav-link active">Overview</a>
-                <a href="#medications" class="nav-link">Log Doses</a>
+                <a href="{% url 'care_profile_list' %}" class="nav-link">Log Doses</a>
                 <a href="#wellness" class="nav-link">Wellness Check-In</a>
                 <a href="#notes" class="nav-link">Care Notes</a>
                 <a href="#directory" class="nav-link">Emergency Directory</a>
@@ -48,7 +48,15 @@
             <div class="panel">
                 <h2>Today's Medication Log</h2>
                 <p class="panel-desc">Mark scheduled doses as Given or Missed for the shared family record.</p>
-                <div class="empty-box">No active care profile linked yet. Connect a profile to begin logging doses.</div>
+                {% if care_profiles %}
+                    <div class="empty-box">
+                {% for p in care_profiles %}
+                    <a href="{% url 'dose_today' p.pk %}">Log doses for {{ p.full_name }}</a>{% if not forloop.last %}<br>{% endif %}
+                {% endfor %}
+            </div>
+                {% else %}
+                    <div class="empty-box">No active care profile linked yet. Ask the family member to add your email to their care profile.</div>
+                {% endif %}
             </div>
 
             <div class="panel">

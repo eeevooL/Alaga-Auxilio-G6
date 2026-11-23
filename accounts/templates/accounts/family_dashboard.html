@@ -16,7 +16,7 @@
             </div>
             <nav class="topbar-nav">
                 <a href="{% url 'family_dashboard' %}" class="nav-link active">Care Summary</a>
-                <a href="#schedule" class="nav-link">Medication History & Reminders</a>
+                <a href="{% url 'care_profile_list' %}" class="nav-link">Medication History & Reminders</a>
                 <a href="#appointments" class="nav-link">Appointments</a>
                 <a href="#instructions" class="nav-link">Send Instructions</a>
                 <a href="#directory" class="nav-link">Medical Info</a>
@@ -48,7 +48,15 @@
             <div class="panel">
                 <h2>Medication Adherence & Reminders</h2>
                 <p class="panel-desc">Review Given/Missed dose logs and configure pre-dose caregiver reminders (0 to 120 mins).</p>
-                <div class="empty-box">No medication schedules configured yet.</div>
+                {% if care_profiles %}
+                    <div class="empty-box">
+                {% for p in care_profiles %}
+                    <a href="{% url 'dose_today' p.pk %}">{{ p.full_name }}: today's doses</a>{% if not forloop.last %}<br>{% endif %}
+                {% endfor %}
+            </div>
+            {% else %}
+                    <div class="empty-box">No care profile yet. <a href="{% url 'care_profile_create' %}">Create one</a> to start the medication schedule.</div>
+            {% endif %}
             </div>
 
             <div class="panel">

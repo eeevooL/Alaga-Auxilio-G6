@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, LoginForm, UserProfileForm
+from care.models import CareProfile
 
 
 ROLE_FAMILY = 'Remote Family'
@@ -88,14 +89,24 @@ def dashboard_redirect_view(request):
     return redirect(get_role_dashboard_url(request.user))
 
 
+def _circle_profiles(user):
+    return CareProfile.objects.filter(
+        is_active=True, members__user=user, members__status='Active'
+    )
+
+
 @role_required(ROLE_CAREGIVER)
 def caregiver_dashboard_view(request):
-    return render(request, 'accounts/caregiver_dashboard.html')
+    return render(request, 'accounts/caregiver_dashboard.html', {
+        'care_profiles': _circle_profiles(request.user),
+    })
 
 
 @role_required(ROLE_FAMILY)
 def family_dashboard_view(request):
-    return render(request, 'accounts/family_dashboard.html')
+    return render(request, 'accounts/family_dashboard.html', {
+        'care_profiles': _circle_profiles(request.user),
+    })
 
 
 @login_required

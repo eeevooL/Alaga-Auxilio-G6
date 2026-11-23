@@ -1,0 +1,94 @@
+{% extends 'care/base.html' %}
+{% block title %}{{ medication.medication_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>{{ medication.medication_name }}</h1>
+        <p class="subtitle">{{ medication.dosage }} &middot; {{ profile.full_name }}
+            {% if not medication.is_active %}&middot; Inactive{% endif %}</p>
+    </div>
+    <div class="actions">
+        <a href="{% url 'medication_list' profile.pk %}" class="btn-inline btn-outline">All Medications</a>
+        {% if can_manage %}
+            <a href="{% url 'medication_update' medication.pk %}" class="btn-inline btn-outline">Edit</a>
+            <form method="POST" action="{% url 'medication_delete' medication.pk %}" class="inline-form"
+                  onsubmit="return confirm('Delete this medication? If it already has logs it will be set to inactive instead.');">
+                {% csrf_token %}
+                <button type="submit" class="btn-small btn-danger">Delete</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card-grid">
+    <div class="surface">
+        <h2>Dose Times</h2>
+        <p class="panel-desc">Taken from {{ medication.start_date|date:"M j, Y" }}{% if medication.end_date %} to {{ medication.end_date|date:"M j, Y" }}{% else %} (ongoing){% endif %}.</p>
+        {% if schedules %}
+        <table class="data-table">
+            <thead><tr><th>Time</th><th>Reminder</th>{% if can_manage %}<th></th>{% endif %}</tr></thead>
+            <tbody>
+            {% for s in schedules %}
+                <tr>
+                    <td><strong>{{ s.dose_time|time:"g:i A" }}</strong></td>
+                    {% if can_manage %}
+                    <td>
+                        <form method="POST" action="{% url 'schedule_update' s.pk %}" class="row-form">
+                            {% csrf_token %}
+                            <input type="number" name="reminder_minutes" min="0" max="120" value="{{ s.reminder_minutes|default_if_none:'' }}" placeholder="min" class="form-input input-tiny">
+                            <button type="submit" class="btn-small btn-outline">Save</button>
+                        </form>
+                    </td>
+                    <td class="right">
+                        <form method="POST" action="{% url 'schedule_delete' s.pk %}" class="inline-form" onsubmit="return confirm('Remove this dose time?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-small btn-danger">Remove</button>
+                        </form>
+                    </td>
+                    {% else %}
+                    <td>{% if s.reminder_minutes is not None %}{{ s.reminder_minutes }} min before{% else %}<span class="muted">None</span>{% endif %}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="empty-box">No dose times yet.</div>
+        {% endif %}
+
+        {% if can_manage %}
+        <form method="POST" action="{% url 'schedule_add' medication.pk %}" class="stack-form" novalidate>
+            {% csrf_token %}
+            {% for field in schedule_form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<ul class="field-error">{{ field.errors }}</ul>{% endif %}
+            {% endfor %}
+            <button type="submit" class="btn-small">Add Dose Time</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="surface">
+        <h2>Dose History</h2>
+        <p class="panel-desc">The 30 most recent entries.</p>
+        {% if logs %}
+        <table class="data-table">
+            <thead><tr><th>Date</th><th>Time</th><th>Status</th><th>Logged by</th></tr></thead>
+            <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log.scheduled_date|date:"M j, Y" }}</td>
+                    <td>{{ log.schedule.dose_time|time:"g:i A" }}</td>
+                    <td><span class="badge {% if log.status == 'Given' %}badge-ok{% else %}badge-bad{% endif %}">{{ log.status }}</span></td>
+                    <td>{{ log.logged_by.full_name|default:"System (auto)" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="empty-box">No doses logged yet.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

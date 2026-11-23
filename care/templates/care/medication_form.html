@@ -1,0 +1,26 @@
+{% extends 'care/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="surface form-surface">
+    <h1>{{ title }}</h1>
+    <p class="subtitle">{{ profile.full_name }}</p>
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            {% if field.name == 'is_active' %}
+                <label class="check-row">{{ field }} {{ field.label }}</label>
+            {% else %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            {% endif %}
+            {% if field.errors %}<ul class="field-error">{{ field.errors }}</ul>{% endif %}
+        </div>
+        {% endfor %}
+        <div class="actions">
+            <button type="submit" class="btn-small">Save</button>
+            <a href="{% url 'medication_list' profile.pk %}" class="btn-inline btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
