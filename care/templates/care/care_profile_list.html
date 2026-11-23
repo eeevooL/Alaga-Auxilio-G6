@@ -1,0 +1,37 @@
+{% extends 'care/base.html' %}
+{% block title %}Care Profiles{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>Care Profiles</h1>
+        <p class="subtitle">The relatives you and your care circle look after.</p>
+    </div>
+    {% if request.user.role == 'Remote Family' %}
+        <a href="{% url 'care_profile_create' %}" class="btn-inline">Create Care Profile</a>
+    {% endif %}
+</div>
+
+{% if profiles %}
+<div class="card-grid">
+    {% for p in profiles %}
+    <div class="surface">
+        <h2>{{ p.full_name }}</h2>
+        <p class="panel-desc">Age {{ p.age }} &middot; Blood type {{ p.blood_type }}<br>Created by {{ p.created_by.full_name }}</p>
+        <div class="actions">
+            <a href="{% url 'dose_today' p.pk %}" class="btn-inline">Today's Doses</a>
+            <a href="{% url 'medication_list' p.pk %}" class="btn-inline btn-outline">Medications</a>
+            <a href="{% url 'care_profile_detail' p.pk %}" class="btn-inline btn-outline">Profile</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="surface">
+    {% if request.user.role == 'Remote Family' %}
+        <div class="empty-box">You have no care profile yet. Create one for your relative, then add their caregiver to the care circle.</div>
+    {% else %}
+        <div class="empty-box">No active care profile linked yet. Ask the family member to add your email to their care profile.</div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
