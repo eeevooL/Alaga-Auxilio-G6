@@ -21,6 +21,7 @@
             <a href="{% url 'dose_today' p.pk %}" class="btn-inline">Today's Doses</a>
             <a href="{% url 'medication_list' p.pk %}" class="btn-inline btn-outline">Medications</a>
             <a href="{% url 'care_profile_detail' p.pk %}" class="btn-inline btn-outline">Profile</a>
+            <a href="{% url 'medication_create' p.pk %}" class="btn-inline btn-outline">+ Add Medication</a>
         </div>
     </div>
     {% endfor %}
